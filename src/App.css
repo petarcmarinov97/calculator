@@ -1,0 +1,11 @@
+.App {
+  text-align: center;
+}
+
+div.wrapper {
+  margin: 15px;
+  max-width: 174px;
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 2px;
+}
