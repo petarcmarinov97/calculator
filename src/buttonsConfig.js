@@ -2,12 +2,12 @@ export const buttonsConfig = [
     {
         label: "AC",
         width: "82px",
-        onClickHandler: "removeLastNumber"
+        onClickHandler: "delete"
     },
     {
         label: "DEL",
         width: "40px",
-        onClickHandler: "removeAll"
+        onClickHandler: "clear"
     },
     {
         label: "/",
