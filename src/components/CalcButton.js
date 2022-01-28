@@ -8,13 +8,13 @@ export class CalcButton extends Component {
   }
 
   handleClick = () => {
-    const { handleClick, label } = this.props;
+    const { handleClick, value } = this.props;
 
-    handleClick && handleClick(label);
+    handleClick && handleClick(value);
   }
 
   render() {
-    const { label, width } = this.props;
+    const { value, width } = this.props;
 
     const buttonStyle = {
       width: width,
@@ -30,7 +30,7 @@ export class CalcButton extends Component {
       size="large"
       onClick={this.handleClick}
     >
-      {label}
+      {value}
     </Button>
   }
 }

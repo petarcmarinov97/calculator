@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { buttonsConfig } from '../buttonsConfig';
+import { deleteAll, deleteLast, calculate, defaultManipulations } from '../buttonUtils';
 import CalcButton from './CalcButton';
 
 export class ButtonBox extends Component {
@@ -10,95 +11,59 @@ export class ButtonBox extends Component {
             inputValue: "",
         }
         this.handleClick = this.handleClick.bind(this);
-        this.switchController = this.switchController.bind(this); 
+        this.switchController = this.switchController.bind(this);
         this.renderButtons = this.renderButtons.bind(this);
+        this.handleEnterKeyPress = this.handleEnterKeyPress.bind(this)
     }
 
-    handleClick(label) {
-        const value = label;
+    handleClick = (buttonValue) => {
+        const value = buttonValue;
         this.switchController(value);
     }
 
+    handleEnterKeyPress(e) {
+        if (e.charCode === 13 || e.charCode === 18) {
+            this.switchController("=");
+        }
+    }
+
     switchController(value) {
+        const { inputValue } = this.state;
         switch (value) {
             case "=": {
-                this.calculate();
+                this.setState({
+                    inputValue: calculate(inputValue)
+                });
                 break;
             }
             case "AC": {
-                this.deleteAll();
+                this.setState({
+                    inputValue: deleteAll()
+                })
                 break;
             }
             case "DEL": {
-                this.deleteLast();
+                this.setState({
+                    inputValue: deleteLast(inputValue)
+                })
                 break;
             }
             default: {
-                const{inputValue}=this.state;
-
-                if (inputValue.length === 1 && (inputValue === '0' || inputValue === '.')) {
-                    if(value!=="."){
-                        this.setState({
-                            inputValue: value
-                        })
-                    }
-                    else{
-                        this.setState({
-                            inputValue: inputValue + "."
-                        })
-                    }
-                } else {
-                    this.setState(
-                        {
-                            inputValue: inputValue + value
-                        })
-                }
+                this.setState({
+                    inputValue: defaultManipulations(inputValue, value)
+                })
                 break;
             }
         }
     }
 
-    calculate = () => {
-        let tempValue = "";
-        let { inputValue } = this.state
-        if (inputValue.includes("--")) {
-            tempValue = inputValue.replace("--", "+");
-        }
-        else {
-            tempValue = inputValue;
-        }
-
-        try {
-            this.setState({
-                inputValue: (eval(tempValue) || "") + ""
-            })
-        } catch (e) {
-            this.setState({
-                inputValue: "Error"
-            })
-        }
-    }
-
-    deleteAll = () => {
-        this.setState({
-            inputValue: ""
-        })
-    }
-
-    deleteLast = () => {
-        const { inputValue } = this.state
-        this.setState({
-            inputValue: inputValue.slice(0, -1)
-        })
-    }
-
-    renderButtons=()=>{
-      return buttonsConfig.map((button, index) => (
+    renderButtons = () => {
+        return buttonsConfig.map((button, index) => (
             <CalcButton
                 handleClick={this.handleClick}
                 key={index}
                 type="primary"
-                label={button.label}
+                value={button.value}
                 width={button.width}
                 size="large" />
         ))
@@ -110,16 +75,18 @@ export class ButtonBox extends Component {
             backgroundColor: '#08979c'
         }
 
-        const { renderButtons,state } = this;
-        const {inputValue} = state;
-        
+        const { renderButtons, state } = this;
+        const { inputValue } = state;
+
         return <div className="wrapper" >
             <input
                 style={inputFieldStyle}
                 type="text"
-                defaultValue={inputValue}
+                value={inputValue}
+                onKeyPress={this.handleEnterKeyPress}
+                onChange={(e) => this.setState({ inputValue: e.currentTarget.value })}
             />
-                {renderButtons()}
+            {renderButtons()}
         </div >
     }
 }
