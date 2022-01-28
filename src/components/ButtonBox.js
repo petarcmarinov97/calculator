@@ -29,6 +29,7 @@ export class ButtonBox extends Component {
 
     switchController(value) {
         const { inputValue } = this.state;
+
         switch (value) {
             case "=": {
                 this.setState({

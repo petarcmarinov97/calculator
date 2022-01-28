@@ -36,44 +36,46 @@ const deleteLast = (inputValue) => {
     return inputValue.slice(0, -1);
 }
 
-const defaultManipulations = (inputValue, value) => {
+const defaultManipulations = (curInput, input) => {
 
-    const lastElement = inputValue[inputValue.length - 1];
-    const beforeLastElement = inputValue[inputValue.length - 2]
-    const inputLength = inputValue.length;
+    const lastChar = curInput[curInput.length - 1];
+    const beforeLastChar = curInput[curInput.length - 2]
+    const prevInputLenght = curInput.length;
 
-    const startingWithZero = (inputLength === 1 && (inputValue === '0' || inputValue === '.'));
+    const isStartingWithZero = (prevInputLenght === 1 && (curInput === '0' || curInput === '.'));
+    const isValueUnLikeLastChar = input !== lastChar;
+    const DoActionsContainsChar = (charToCheck) => actions.includes(charToCheck);
+    const isInputContainsActions = actions.some(element => input.toString().includes(element));
+    const isInputEqualsToLastChar = curInput[curInput.length - 1] === input;
+    const isValueADigit = digits.includes(input);
+    const endingWithZeroAfterAction = (isValueADigit && DoActionsContainsChar(beforeLastChar) && lastChar === "0");
 
-    const endingWithZeroAfterAction =
-        (digits.includes(value)
-            && actions.includes(beforeLastElement)
-            && lastElement === "0"
-            && value !== "=")
+    const twoFollowingActions = (DoActionsContainsChar(lastChar) && isValueUnLikeLastChar && isInputContainsActions);
 
-    const twoFollowingActions = (actions.includes(lastElement)
-        && actions.includes(value))
-        && value !== lastElement;
-
-    if (startingWithZero) {
-        if (value !== ".") {
-            inputValue = value;
+    if (isStartingWithZero) {
+        if (input !== ".") {
+            curInput = input;
         }
         else {
-            inputValue += ".";
+            curInput += ".";
         }
     }
-    else if (actions.includes(value) && inputValue[inputValue.length - 1] === value) {
-        return inputValue;
+    else if (DoActionsContainsChar(input) && isInputEqualsToLastChar) {
+        return curInput;
     }
     else if (endingWithZeroAfterAction || twoFollowingActions) {
-        let tempValue = inputValue.slice(0, inputValue.length - 1);
-        inputValue = tempValue + value.toString();
+        let tempValue = curInput.slice(0, curInput.length - 1);
+        curInput = tempValue + input.toString();
+    }
+    else if (isInputContainsActions && actions.includes(input)) {
+        let tempValue = eval(curInput) + input;
+        curInput = tempValue;
     }
     else {
-        inputValue += value
+        curInput += input;
     }
-
-    return inputValue;
+    
+    return curInput;
 }
 
 module.exports = {
