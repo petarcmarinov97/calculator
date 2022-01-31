@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
 import { buttonsConfig } from '../buttonsConfig';
-import { deleteAll, deleteLast, calculate } from '../buttonUtils';
+import { deleteAll, deleteLast, calculate, mathFactorial, mathPow, mathSqrt } from '../buttonUtils';
 import CalcButton from './CalcButton';
 
 export class ButtonBox extends Component {
 
     constructor() {
         super();
+
         this.state = {
             inputValue: "",
+            isValidInput: false
         }
+
         this.handleClick = this.handleClick.bind(this);
         this.switchController = this.switchController.bind(this);
         this.renderButtons = this.renderButtons.bind(this);
-        this.handleEnterKeyPress = this.handleEnterKeyPress.bind(this)
-        this.onChange = this.onChange.bind(this);
         this.sortButtons = this.sortButtons.bind(this);
-        this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
+        this.onChangeHandler = this.onChangeHandler.bind(this);
+        this.onKeyDownHandler = this.onKeyDownHandler.bind(this);
     }
 
     handleClick = (buttonValue) => {
@@ -24,25 +26,30 @@ export class ButtonBox extends Component {
         this.switchController(value);
     }
 
-    handleOnKeyDown(e) {
-        if (e.keyCode === 46) {
+    onChangeHandler(e) {
+        const { isValidInput } = this.state;
+
+        if (isValidInput) {
+            this.setState({ inputValue: e.currentTarget.value });
+        }
+    }
+
+    onKeyDownHandler(e) {
+        const str = new RegExp("^[0-9()+\\-*.\\/]*$");
+
+        str.test(e.key)
+            ? this.setState({ isValidInput: true })
+            : this.setState({ isValidInput: false })
+
+        if (e.key === "Enter" || e.key === "=") {
+            this.switchController("=");
+        }
+        if (e.key === "Backspace") {
+            this.switchController("AC");
+        }
+        if (e.key === "Delete") {
             this.switchController("DEL");
         }
-    }
-
-    handleEnterKeyPress(e) {
-        if (e.charCode === 13 || e.charCode === 61) {
-            this.switchController(String.fromCharCode(61));
-            e.preventDefault();
-        }
-
-        if ((e.charCode < 42 || e.charCode > 57)) {
-            e.preventDefault();
-        }
-    }
-
-    onChange(e) {
-        this.setState({ inputValue: e.currentTarget.value });
     }
 
     switchController(value) {
@@ -62,6 +69,18 @@ export class ButtonBox extends Component {
                 tempValue = deleteAll();
                 break;
             }
+            case "x²": {
+                tempValue = mathPow(inputValue);
+                break;
+            }
+            case "√": {
+                tempValue = mathSqrt(inputValue);
+                break;
+            }
+            case "x!": {
+                tempValue = mathFactorial(inputValue);
+                break;
+            }
             default: {
                 tempValue = (inputValue + value).toString();
                 break;
@@ -69,7 +88,7 @@ export class ButtonBox extends Component {
         }
 
         this.setState({
-            inputValue: tempValue
+            inputValue: tempValue.toString()
         })
     }
 
@@ -97,7 +116,7 @@ export class ButtonBox extends Component {
         return buttonsConfig.map((button, index) => (
             <CalcButton
                 handleClick={this.handleClick}
-                key={index}
+                key={button.value}
                 type="primary"
                 value={button.value}
                 width={button.width}
@@ -110,8 +129,8 @@ export class ButtonBox extends Component {
             height: "40px",
             backgroundColor: '#08979c'
         }
-
-        const { renderButtons, state } = this;
+        //da si vzema tuk
+        const { renderButtons, onKeyDownHandler, onChangeHandler, state } = this;
         const { inputValue } = state;
 
         return <div className="wrapper" >
@@ -119,9 +138,8 @@ export class ButtonBox extends Component {
                 style={inputFieldStyle}
                 type="text"
                 value={inputValue}
-                onKeyDown={this.handleOnKeyDown}
-                onKeyPress={this.handleEnterKeyPress}
-                onChange={this.onChange}
+                onKeyDown={onKeyDownHandler}
+                onChange={onChangeHandler}
             />
             {renderButtons()}
         </div >

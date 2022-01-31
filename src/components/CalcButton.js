@@ -4,6 +4,7 @@ import { Button } from 'antd';
 export class CalcButton extends Component {
   constructor(props) {
     super(props);
+
     this.handleClick = this.handleClick.bind(this);
   }
 

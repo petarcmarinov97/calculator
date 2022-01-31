@@ -36,8 +36,26 @@ const deleteLast = (inputValue) => {
     return inputValue.slice(0, -1);
 }
 
+const mathFactorial = (inputValue) => {
+    if (inputValue === 0 || inputValue === 1) {
+        return 1;
+    } else {
+        return inputValue * mathFactorial(inputValue - 1);
+    }
+}
+
+const mathPow = (inputValue) => {
+    return eval(inputValue) ** 2;
+}
+
+const mathSqrt = (inputValue) => {
+    return Math.sqrt(eval(inputValue));
+}
 module.exports = {
     calculate,
     deleteAll,
     deleteLast,
+    mathFactorial,
+    mathPow,
+    mathSqrt
 }

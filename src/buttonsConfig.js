@@ -22,13 +22,12 @@ export const buttonsConfig = [
         width: `${defaultWidth}px`,
     },
     {
-        position: [0, 2],
+        position: [1, 3],
         label: "/",
         value: "/",
         type: "action",
         width: `${defaultWidth}px`,
     },
-
     {
         position: [1, 0],
         label: "7",
@@ -51,7 +50,7 @@ export const buttonsConfig = [
         width: `${defaultWidth}px`,
     },
     {
-        position: [1, 3],
+        position: [2, 3],
         label: "*",
         value: "*",
         type: "action",
@@ -79,7 +78,7 @@ export const buttonsConfig = [
         width: `${defaultWidth}px`,
     },
     {
-        position: [2, 3],
+        position: [3, 3],
         label: "+",
         value: "+",
         type: "action",
@@ -87,10 +86,10 @@ export const buttonsConfig = [
         onClickHandler: "sum"
     },
     {
-        position: [4, 2],
+        position: [4, 3],
         label: "=",
         value: "=",
-        width: `${biggerstWidth}px`,
+        width: `${defaultWidth}px`,
     },
 
     {
@@ -108,24 +107,58 @@ export const buttonsConfig = [
         width: `${defaultWidth}px`,
     },
     {
-        position: [3, 3],
+        position: [4, 2],
         label: "-",
         value: "-",
         type: "action",
         width: `${defaultWidth}px`,
     },
     {
-        position: [4, 0],
+        position: [4, 1],
         label: ".",
         value: ".",
         width: `${defaultWidth}px`,
     },
     {
-        position: [4, 1],
+        position: [4, 0],
         label: "0",
         value: 0,
         type: "digit",
+        width: `${biggerstWidth}px`,
+    },
+    {
+        position: [0, 2],
+        label: "(",
+        value: "(",
+        type: "digit",
         width: `${defaultWidth}px`,
     },
-
+    {
+        position: [0, 3],
+        label: ")",
+        value: ")",
+        type: "digit",
+        width: `${defaultWidth}px`,
+    },
+    {
+        position: [1, 4],
+        label: "√",
+        value: "√",
+        type: "digit",
+        width: `${defaultWidth}px`,
+    },
+    {
+        position: [2, 4],
+        label: "x²",
+        value: `x²`,
+        type: "digit",
+        width: `${defaultWidth}px`,
+    },
+    {
+        position: [3, 4],
+        label: "x!",
+        value: "x!",
+        type: "digit",
+        width: `${defaultWidth}px`,
+    },
 ]
