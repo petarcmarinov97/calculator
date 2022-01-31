@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { buttonsConfig } from '../buttonsConfig';
-import { deleteAll, deleteLast, calculate, defaultManipulations } from '../buttonUtils';
+import { deleteAll, deleteLast, calculate } from '../buttonUtils';
 import CalcButton from './CalcButton';
 
 export class ButtonBox extends Component {
@@ -14,6 +14,9 @@ export class ButtonBox extends Component {
         this.switchController = this.switchController.bind(this);
         this.renderButtons = this.renderButtons.bind(this);
         this.handleEnterKeyPress = this.handleEnterKeyPress.bind(this)
+        this.onChange = this.onChange.bind(this);
+        this.sortButtons = this.sortButtons.bind(this);
+        this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
     }
 
     handleClick = (buttonValue) => {
@@ -21,44 +24,75 @@ export class ButtonBox extends Component {
         this.switchController(value);
     }
 
-    handleEnterKeyPress(e) {
-        if (e.charCode === 13 || e.charCode === 18) {
-            this.switchController("=");
+    handleOnKeyDown(e) {
+        if (e.keyCode === 46) {
+            this.switchController("DEL");
         }
+    }
+
+    handleEnterKeyPress(e) {
+        if (e.charCode === 13 || e.charCode === 61) {
+            this.switchController(String.fromCharCode(61));
+            e.preventDefault();
+        }
+
+        if ((e.charCode < 42 || e.charCode > 57)) {
+            e.preventDefault();
+        }
+    }
+
+    onChange(e) {
+        this.setState({ inputValue: e.currentTarget.value });
     }
 
     switchController(value) {
         const { inputValue } = this.state;
+        let tempValue = "";
 
         switch (value) {
             case "=": {
-                this.setState({
-                    inputValue: calculate(inputValue)
-                });
+                tempValue = calculate(inputValue);
                 break;
             }
             case "AC": {
-                this.setState({
-                    inputValue: deleteAll()
-                })
+                tempValue = deleteLast(inputValue);
                 break;
             }
             case "DEL": {
-                this.setState({
-                    inputValue: deleteLast(inputValue)
-                })
+                tempValue = deleteAll();
                 break;
             }
             default: {
-                this.setState({
-                    inputValue: defaultManipulations(inputValue, value)
-                })
+                tempValue = (inputValue + value).toString();
                 break;
             }
         }
+
+        this.setState({
+            inputValue: tempValue
+        })
+    }
+
+    sortButtons() {
+        buttonsConfig
+            .sort(function (a, b) {
+                var rowA = a.position[0];
+                var rowB = b.position[0];
+
+                var colA = a.position[1];
+                var colB = b.position[1];
+
+                if (rowA > rowB) return 1;
+                if (rowA < rowB) return -1;
+                if (colA > colB) return 1;
+                if (colB < colA) return -1;
+                if (rowA === rowB && colA < colB) return -1;
+                return 0;
+            })
     }
 
     renderButtons = () => {
+        this.sortButtons();
         return buttonsConfig.map((button, index) => (
             <CalcButton
                 handleClick={this.handleClick}
@@ -84,8 +118,9 @@ export class ButtonBox extends Component {
                 style={inputFieldStyle}
                 type="text"
                 value={inputValue}
+                onKeyDown={this.handleOnKeyDown}
                 onKeyPress={this.handleEnterKeyPress}
-                onChange={(e) => this.setState({ inputValue: e.currentTarget.value })}
+                onChange={this.onChange}
             />
             {renderButtons()}
         </div >
