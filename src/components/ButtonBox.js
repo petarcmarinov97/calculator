@@ -93,6 +93,7 @@ export class ButtonBox extends Component {
 
     renderButtons = () => {
         this.sortButtons();
+
         return buttonsConfig.map((button, index) => (
             <CalcButton
                 handleClick={this.handleClick}

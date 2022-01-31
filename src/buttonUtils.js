@@ -36,7 +36,6 @@ const deleteLast = (inputValue) => {
     return inputValue.slice(0, -1);
 }
 
-
 module.exports = {
     calculate,
     deleteAll,
