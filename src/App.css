@@ -1,0 +1,15 @@
+.App {
+  text-align: center;
+}
+
+div.wrapper {
+  margin: 15px;
+  max-width: 217px;
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 2px;
+}
+
+div.wrapper > button.Button:hover{
+  background-color: green;
+}
